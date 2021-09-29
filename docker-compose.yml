@@ -1,0 +1,15 @@
+version: '3'
+
+services:
+
+  worker-1:
+    image: pushshift-cluster-template:latest
+    environment:
+      - SDATE=2021-07-01
+      - EDATE=2021-08-01
+
+  worker-2:
+    image: pushshift-cluster-template:latest
+    environment:
+      - SDATE=2021-08-01
+      - EDATE=2021-09-01
