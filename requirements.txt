@@ -5,3 +5,4 @@ aiohttp
 tqdm
 aiolimiter
 sqlalchemy
+aiohttp_retry
