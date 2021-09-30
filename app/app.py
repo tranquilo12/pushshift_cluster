@@ -213,13 +213,6 @@ async def extract_comments(urls: list) -> list:
 
 if __name__ == "__main__":
 
-    os.environ["EXEC_TYPE"] = "SUB"
-    os.environ["SDATE"] = '2021-07-01'
-    os.environ["EDATE"] = '2021-07-03'
-
-    os.environ["AWS_ACCESS_KEY_ID"] = "AKIAQZFC5DKVP6GYWMYE"
-    os.environ["AWS_SECRET_ACCESS_KEY"] = "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"
-
     logging.info("Fetching s3 client...")
     s3_client = get_s3_client(logger=logging)
     logging.info("Fetched!...\n")
