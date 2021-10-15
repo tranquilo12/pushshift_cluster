@@ -5,15 +5,16 @@ import json
 import logging
 import os
 import platform
-from urllib.parse import urlparse, urlencode
 from typing import Optional
+from urllib.parse import urlparse, urlencode
 
+import pandas as pd
 from aiohttp import ClientSession
 from aiolimiter import AsyncLimiter
 from tqdm.auto import tqdm
-from tqdm_logger import TqdmToLogger
 
-from utils import s3_key_exists, get_s3_client, write_to_s3, download
+from tqdm_logger import TqdmToLogger
+from utils import s3_key_exists, get_s3_client, write_to_s3, download_modified, batch, upload_json_gz_to_s3
 
 # setup logging here
 logging.basicConfig(
@@ -234,7 +235,7 @@ if __name__ == "__main__":
     if exec_type == "COMMENTS":
         logging.info("Making urls for fetching comments, using submission ids...")
         comments_urls_with_sub_ids = asyncio.run(
-            make_urls_using_sub_id_for_comments(start_date=sdate, end_date=edate)
+            make_urls_using_sub_id_for_comments(sdate=start_date, edate=end_date)
         )
         logging.info("Fetched!...\n")
 
@@ -244,7 +245,7 @@ if __name__ == "__main__":
         )
         logging.info("Fetched!...\n")
 
-        upload_key = f"comments_list_from_{sdate}_{edate}.json.gzip"
+        upload_key = f"comments_list_from_{start_date}_{end_date}.json.gzip"
         logging.info(f"Uploading to S3://polygonio-dumps/{upload_key}")
         upload_json_gz_to_s3(key=upload_key, obj=comments_list)
         logging.info("Uploaded!\n")

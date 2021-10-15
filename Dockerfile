@@ -1,7 +1,7 @@
-FROM python:3.8-alpine as base
+FROM python:3.8-slim as base
 
 FROM base as builder
-RUN apk update && apk add gcc g++ libc-dev
+# RUN apt update && apt add libgcc gcc g++ libc-dev
 RUN mkdir /install
 
 COPY requirements.txt /requirements.txt

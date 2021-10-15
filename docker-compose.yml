@@ -15,3 +15,10 @@ services:
       - EXEC_TYPE=COMMENTS
       - SDATE=2021-08-01
       - EDATE=2021-09-01
+
+  worker-3:
+    image: pushshift-cluster-template:latest
+    environment:
+      - EXEC_TYPE=COMMENTS
+      - SDATE=2021-09-01
+      - EDATE=2021-10-01

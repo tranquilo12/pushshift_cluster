@@ -1,3 +1,4 @@
+import io
 import os
 import gzip
 import json
@@ -90,16 +91,19 @@ async def download_modified(
         sub_id = None
 
     timeout = aiohttp.ClientTimeout(total=60 * 60)
-    retry_client = RetryClient(raise_for_status=False, retry_options=ExponentialRetry(attempts=3), timeout=timeout)
     async with limiter:
-        try:
-            async with retry_client.get(url=url) as response:
-                response_json = await response.json()
-                response_json["submission_id"] = sub_id
-            await retry_client.close()
-        except aiohttp.client_exceptions.ContentTypeError as e:
-            response_json = None
-
+        async with RetryClient(raise_for_status=False, retry_options=ExponentialRetry(attempts=3), timeout=timeout) as retry_client:
+            try:
+                async with retry_client.get(url=url) as response:
+                    response_json = await response.json()
+                    if response_json:
+                        response_json["submission_id"] = sub_id
+            except aiohttp.client_exceptions.ContentTypeError as _:
+                response_json = None
+            except aiohttp.client_exceptions.ClientConnectorError as _:
+                response_json = None
+            except aiohttp.client_exceptions.ServerDisconnectedError as _:
+                response_json = None
     return response_json
 
 
